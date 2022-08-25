@@ -4,14 +4,17 @@ import { ApiError } from './utils/api-error';
 import { asyncWrapper } from './utils/async-wrapper';
 import { NotFoundError } from './utils/not-found-error';
 import { StatusCodes } from 'http-status-codes';
-import ErrorHandler from './utils/error-handler';
+import { handleErrors } from './middlewares/error-handler';
 import { CreateUserRequest } from './validation/create-user-request';
 import RequestValidator from './validation/request-validator';
+import { Logger } from './utils/logger';
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(Logger.getHttpLoggerInstance());
+const logger = Logger.getInstance();
 
 app.get('/', async (req, res) => {
   return res.send({
@@ -41,7 +44,7 @@ app.use('/create-user', RequestValidator.validate(CreateUserRequest), async (req
 app.use('*', (req, res, next) => next(new NotFoundError(req.path)));
 
 // General error handler
-app.use(ErrorHandler.handle());
+app.use(handleErrors);
 
 const PORT = 3000;
 
