@@ -1,6 +1,10 @@
 import express, { NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import { StatusCodes } from 'http-status-codes';
+import helmet from 'helmet';
+import cors from 'cors';
+import toobusy from 'toobusy-js';
+import xss from 'xss-clean';
 import { ApiError } from './utils/api-error';
 import { asyncWrapper } from './utils/async-wrapper';
 import { NotFoundError } from './utils/not-found-error';
@@ -12,10 +16,24 @@ import Config from './utils/config';
 
 const app = express();
 
+app.use(helmet());
+app.use(xss());
+app.use(cors({
+  origin: 'http://example.com',
+  optionsSuccessStatus: 200,
+}))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(Logger.getHttpLoggerInstance());
 const logger = Logger.getInstance();
+
+app.use((req, res, next) => {
+  if (toobusy()) {
+    res.status(StatusCodes.SERVICE_UNAVAILABLE).send('Server busy!');
+  } else {
+    next();
+  }
+});
 
 app.get('/', async (req, res) => {
   return res.send({
