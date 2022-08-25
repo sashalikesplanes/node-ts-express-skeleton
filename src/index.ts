@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import helmet from 'helmet';
 import cors from 'cors';
 import toobusy from 'toobusy-js';
+// @ts-ignore no types exist
 import xss from 'xss-clean';
 import { ApiError } from './utils/api-error';
 import { asyncWrapper } from './utils/async-wrapper';
