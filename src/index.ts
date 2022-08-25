@@ -1,13 +1,14 @@
 import express, { NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
+import { StatusCodes } from 'http-status-codes';
 import { ApiError } from './utils/api-error';
 import { asyncWrapper } from './utils/async-wrapper';
 import { NotFoundError } from './utils/not-found-error';
-import { StatusCodes } from 'http-status-codes';
 import { handleErrors } from './middlewares/error-handler';
 import { CreateUserRequest } from './validation/create-user-request';
 import RequestValidator from './validation/request-validator';
 import { Logger } from './utils/logger';
+import Config from './utils/config';
 
 const app = express();
 
@@ -46,7 +47,7 @@ app.use('*', (req, res, next) => next(new NotFoundError(req.path)));
 // General error handler
 app.use(handleErrors);
 
-const PORT = 3000;
+const PORT = Config.port;
 
 try {
   app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
