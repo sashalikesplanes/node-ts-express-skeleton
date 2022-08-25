@@ -1,13 +1,11 @@
 import express, { NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import { ApiError, BadRequestError } from './utils/api-error';
+import { ApiError } from './utils/api-error';
 import { asyncWrapper } from './utils/async-wrapper';
 import { NotFoundError } from './utils/not-found-error';
 import { StatusCodes } from 'http-status-codes';
 import ErrorHandler from './utils/error-handler';
-import { plainToInstance } from 'class-transformer';
 import { CreateUserRequest } from './validation/create-user-request';
-import { validate } from 'class-validator';
 import RequestValidator from './validation/request-validator';
 
 const app = express();

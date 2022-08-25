@@ -17,11 +17,6 @@ export default class RequestValidator {
           const validationErrorText = 'Request validation failed';
           console.log('Validation errors found!', rawErrors);
           next(new BadRequestError(validationErrorText, rawErrors));
-        } else {
-          // create user
-          res.status(StatusCodes.OK).send({
-            message: 'Hello from create user',
-          });
         }
       });
       next();
